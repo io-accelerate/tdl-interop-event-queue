@@ -94,9 +94,9 @@ artifacts {
 
 uploadArchives {
     repositories.mavenDeployer {
-        name = 'bintray-julianghionoiu-tdl-interop-event-queue'
-        repository(id: 'bintray-julianghionoiu-tdl-interop-event-queue',
-                url: 'https://api.bintray.com/maven/julianghionoiu/maven/tdl-interop-event-queue') {
+        name = 'bintray-julianghionoiu-queue-client'
+        repository(id: 'bintray-julianghionoiu-queue-client',
+                url: 'https://api.bintray.com/maven/julianghionoiu/maven/queue-client') {
             authentication(userName: readSystem("BINTRAY_USER"), password: readSystem("BINTRAY_KEY"))
         }
 
