@@ -63,7 +63,6 @@ subprojects {
 apply plugin: "ch.netzwerg.release"
 
 release {
-    dependsOn subprojects.build // 'distZip' could e.g be used in combination with the 'application' plugin
     push = false // 'true' would e.g. be useful when triggering the release task on a CI server
     versionSuffix = '-SNAPSHOT' // '.DEV' or '' (empty) could be useful alternatives
     tagPrefix = 'v' // 'r' or '' (empty) could be useful alternatives
