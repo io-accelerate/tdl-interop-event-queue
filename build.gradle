@@ -12,6 +12,12 @@ buildscript {
     }
 }
 
+private String getVersionFromFile() {
+    def scriptPath = project.projectDir.toPath()
+    return scriptPath.resolve("version.txt").toFile().getText('UTF-8')
+}
+
+
 subprojects {
     apply plugin: 'java'
     apply plugin: "net.ltgt.apt"
@@ -19,6 +25,7 @@ subprojects {
     sourceCompatibility = JavaVersion.VERSION_1_8
     targetCompatibility = JavaVersion.VERSION_1_8
     group = 'ro.ghionoiu'
+    version = getVersionFromFile()
 
     repositories {
         mavenCentral()
