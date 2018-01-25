@@ -8,6 +8,7 @@ buildscript {
     dependencies {
         classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.3'
         classpath "net.ltgt.gradle:gradle-apt-plugin:0.13"
+        classpath "ch.netzwerg:gradle-release-plugin:1.2.4"
     }
 }
 
@@ -15,8 +16,9 @@ subprojects {
     apply plugin: 'java'
     apply plugin: "net.ltgt.apt"
 
-    sourceCompatibility = 1.8
-    version = '0.1.0'
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+    group = 'ro.ghionoiu'
 
     repositories {
         mavenCentral()
