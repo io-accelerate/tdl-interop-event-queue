@@ -72,6 +72,38 @@ When done, stop consuming the messages
 ```
 
 
+## As a command line Producer
+
+### Download artifact from Github
+
+See
+https://github.com/julianghionoiu/tdl-interop-event-queue/releases
+
+### Configure
+
+Create a `.private/local-acceptance.conf` that contains the SQS configuration:
+```
+sqs {
+  serviceEndpoint = "http://localhost:9324"
+  signingRegion = "eu-west-2"
+  accessKey = "x"
+  secretKey = "y"
+  queueUrl = "http://localhost:9324/queue/participant-events"
+}
+```
+
+### Run QueueCLITool
+
+```bash
+java -Dconfig.file=.private/local-acceptance.conf -jar ./queue-cli-tool/build/libs/queue-cli-tool-*-all.jar [command] [args to command]
+```
+
+For usage and examples, run the below:
+```bash
+java -Dconfig.file=.private/local-acceptance.conf -jar ./queue-cli-tool/build/libs/queue-cli-tool-*-all.jar
+```
+
+
 ## To fully test and build
 
 Run unit tests
