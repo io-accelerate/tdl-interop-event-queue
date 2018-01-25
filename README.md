@@ -26,7 +26,7 @@ Run tests
 ```
 
 
-### Release to jcenter and mavenCentral
+### Release library to jcenter and mavenCentral
 
 The CI server is configured to pushs release branches to Bintray.
 You trigger the process by running the `release` command locally.
