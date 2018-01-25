@@ -3,6 +3,75 @@
 [![Codeship Status for julianghionoiu/dev-screen-record](https://img.shields.io/codeship/f4e468f0-e403-0135-2d6a-3e0434e5c2c3/master.svg)](https://codeship.com/projects/268708)
 
 
+## To use as a library
+
+
+### Add as Maven dependency
+
+Add a dependency to `ro.ghionoiu:queue-client` in `compile` scope. See `bintray` shield for latest release number.
+```xml
+<dependency>
+  <groupId>ro.ghionoiu</groupId>
+  <artifactId>queue-client</artifactId>
+  <version>0.1.10</version>
+  <type>pom</type>
+</dependency>
+```
+
+Initialise in your app
+```java
+        // Initialise event queue
+        AmazonSQS client;
+        String queueUrl;
+        SqsEventQueue sqsEventQueue = new SqsEventQueue(client, queueUrl);
+```
+
+
+### To use as Producer
+
+The queue can be used to send classes annotated as QueueEvent
+```java
+        sqsEventQueue.send(new SomeEvent("ok"));
+```
+
+Where:
+```java
+
+        @QueueEvent(name = "someEvent", version = "0.1")
+        private class SomeEvent {
+            private String text;
+
+            SomeEvent(String text) {
+                this.text = text;
+            }
+
+            public String getText() {
+                return text;
+            }
+        }
+
+```
+
+### To use as Consumer
+
+Register event handlers
+```java
+        List<Object> capturedEvents = new ArrayList<>();
+        QueueEventHandlers queueEventHandlers = new QueueEventHandlers();
+        queueEventHandlers.put(ChallengeStartedEvent.class, capturedEvents::add);
+```
+
+Start consuming messages by subscribing to the queue, the process will detach at this point
+```java
+        sqsEventQueue.subscribeToMessages(queueEventHandlers);
+```
+
+When done, stop consuming the messages
+```java
+        sqsEventQueue.unsubscribeFromMessages();
+```
+
+
 ## To fully test and build
 
 Run unit tests
