@@ -28,7 +28,7 @@ curl \
     -X POST -d "${POST_DATA}" "https://api.github.com/repos/julianghionoiu/tdl-interop-event-queue/releases"
 
 
-CURL_OUTPUT="./build/github-release.listing"
+CURL_OUTPUT="./queue-cli-tool/build/github-release.listing"
 echo "Getting Github ReleaseId"
 curl \
     -H "Authorization: token ${GITHUB_TOKEN}" \
