@@ -1,0 +1,47 @@
+sourceSets {
+    acceptance {
+        java.srcDir file('src/acceptance/java')
+        resources.srcDir file('src/acceptance/resources')
+        compileClasspath += main.output + test.output + configurations.testRuntime
+        runtimeClasspath += main.output + test.output + configurations.testRuntime
+    }
+}
+
+configurations {
+    acceptanceCompile.extendsFrom testCompile
+    acceptanceRuntime.extendsFrom testRuntime
+}
+
+apply plugin: 'idea'
+
+idea {
+    module {
+        testSourceDirs += file('src/acceptance/java')
+    }
+}
+
+ext {
+    jacksonVersion = '2.8.4'
+}
+
+dependencies {
+    compile 'com.amazonaws:aws-java-sdk-sqs:1.11.253'
+
+    compile 'com.fasterxml.jackson.core:jackson-core:'+jacksonVersion
+    compile 'com.fasterxml.jackson.core:jackson-databind:'+jacksonVersion
+    compile 'com.fasterxml.jackson.core:jackson-annotations:'+jacksonVersion
+}
+
+task acceptanceTest(type: Test) {
+    description "Runs acceptance test"
+    group = 'verification'
+    testClassesDir = sourceSets.acceptance.output.classesDir
+    classpath = sourceSets.acceptance.runtimeClasspath
+    outputs.upToDateWhen { false }
+
+    useJUnit {}
+}
+
+//Chaining
+acceptanceTest.dependsOn test
+check.dependsOn acceptanceTest

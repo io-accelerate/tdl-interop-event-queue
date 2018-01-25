@@ -1,0 +1,10 @@
+.idea
+.DS_Store
+out
+.gradle
+aws-ses-credentials.properties
+.cache
+pid-*
+*.eml
+.private
+build
