@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import tdl.participant.queue.connector.EventProcessingException;
 import tdl.participant.queue.connector.EventSerializationException;
 import tdl.participant.queue.connector.QueueEvent;
 import tdl.participant.queue.connector.SqsEventQueue;
@@ -86,7 +87,7 @@ public class SendEventCommand implements Command {
         return mapper.readerFor(eventNameToEventType.get(eventName)).readValue(messageBody);
     }
 
-    private static void sendEventToSQS(Object message, SqsEventQueue sqsEventQueue) throws EventSerializationException {
+    private static void sendEventToSQS(Object message, SqsEventQueue sqsEventQueue) throws EventSerializationException, EventProcessingException {
         sqsEventQueue.send(message);
     }
 

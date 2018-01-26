@@ -1,5 +1,6 @@
 package tdl.participant.queue.connector;
 
+import com.amazonaws.SdkClientException;
 import com.amazonaws.services.sqs.AmazonSQS;
 import com.amazonaws.services.sqs.model.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -41,7 +42,12 @@ public class SqsEventQueue {
         return new QueueSize(available, notVisible, delayed);
     }
 
-    public void send(Object object) throws EventSerializationException {
+    public void send(Object object) throws EventSerializationException, EventProcessingException {
+        send(object, 10000, 5000);
+    }
+
+
+    public void send(Object object, int sdkClientExecutionTimeout, int sdkRequestTimeout) throws EventSerializationException, EventProcessingException {
         QueueEvent annotation = object.getClass().getAnnotation(QueueEvent.class);
         if (annotation == null) {
             throw new EventSerializationException(object.getClass()+" not a QueueEvent");
@@ -51,6 +57,8 @@ public class SqsEventQueue {
 
         try {
             SendMessageRequest sendMessageRequest = new SendMessageRequest();
+            sendMessageRequest.setSdkClientExecutionTimeout(sdkClientExecutionTimeout);
+            sendMessageRequest.setSdkRequestTimeout(sdkRequestTimeout);
             sendMessageRequest.setQueueUrl(queueUrl);
             sendMessageRequest.setMessageBody(mapper.writeValueAsString(object));
             sendMessageRequest.addMessageAttributesEntry(ATTRIBUTE_EVENT_NAME,
@@ -60,6 +68,8 @@ public class SqsEventQueue {
             client.sendMessage(sendMessageRequest);
         } catch (JsonProcessingException e) {
             throw new EventSerializationException("Failed to serialize event of type "+object.getClass(), e);
+        } catch (SdkClientException e) {
+            throw new EventProcessingException("Failed to send message due to connectivity issues.", e);
         }
     }
 

@@ -24,11 +24,13 @@ import static org.hamcrest.MatcherAssert.assertThat;
 public class QueueProcessingAcceptanceTest {
     private AmazonSQS client;
     private String queueUrl;
+    private String blockingQueueUrl;
 
     @Before
     public void setUp() {
         client = testAwsClient();
         queueUrl = "http://localhost:9324/queue/acceptance-test";
+        blockingQueueUrl = "http://127.0.0.99:19432";
     }
 
     @Test
@@ -55,6 +57,18 @@ public class QueueProcessingAcceptanceTest {
         assertThat(capturedEvents.size(), equalTo(1));
         assertThat(capturedEvents.get(0), instanceOf(ChallengeStartedEvent.class));
     }
+
+    @Test(timeout = 2000)
+    public void should_not_block_if_queue_not_available() {
+        SqsEventQueue sqsEventQueue = new SqsEventQueue(client, blockingQueueUrl);
+        try {
+            sqsEventQueue.send(new UnknownEvent("unknown event"),
+                    1000, 1000);
+        } catch (Exception e) {
+            //Ignored
+        }
+    }
+
 
     private static AmazonSQS testAwsClient() {
         AwsClientBuilder.EndpointConfiguration endpointConfiguration =
