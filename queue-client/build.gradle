@@ -95,7 +95,7 @@ uploadArchives {
 
         pom.project {
             name 'Client for the event queue'
-            description 'Library designed for recording source code from programming sessions.'
+            description 'Library designed to manage the interaction with the event queue'
             url 'https://github.com/julianghionoiu/tdl-interop-event-queue'
 
             developers {
