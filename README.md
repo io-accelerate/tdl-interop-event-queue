@@ -95,12 +95,12 @@ sqs {
 ### Run QueueCLITool
 
 ```bash
-java -Dconfig.file=.private/local-acceptance.conf -jar ./queue-cli-tool/build/libs/queue-cli-tool-*-all.jar [command] [args to command]
+DRY_RUN=true java -Dconfig.file=.private/aws-queue-cli.conf -jar ./queue-cli-tool/build/libs/queue-cli-tool-*-all.jar [command] [args to command]
 ```
 
 For usage and examples, run the below:
 ```bash
-java -Dconfig.file=.private/local-acceptance.conf -jar ./queue-cli-tool/build/libs/queue-cli-tool-*-all.jar
+DRY_RUN=true java -Dconfig.file=.private/aws-queue-cli.conf -jar ./queue-cli-tool/build/libs/queue-cli-tool-*-all.jar
 ```
 
 
