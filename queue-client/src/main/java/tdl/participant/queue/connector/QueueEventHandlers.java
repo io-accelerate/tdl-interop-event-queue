@@ -9,9 +9,9 @@ public class QueueEventHandlers {
     private EventInspector afterEventInspector;
 
     public QueueEventHandlers() {
-        beforeEventInspector = (eventName, eventPayload) -> {};
+        beforeEventInspector = (eventName, eventVersion, eventObject) -> {};
         handleMap = new HashMap<>();
-        afterEventInspector = (eventName, eventPayload) -> {};
+        afterEventInspector = (eventName, eventVersion, eventObject) -> {};
     }
 
     public void before(EventInspector beforeEventInspector) {

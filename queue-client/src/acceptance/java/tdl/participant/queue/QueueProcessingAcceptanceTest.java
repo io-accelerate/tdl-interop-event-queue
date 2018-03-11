@@ -41,9 +41,9 @@ public class QueueProcessingAcceptanceTest {
         List<Object> processedEvents = new ArrayList<>();
         List<Object> beforeEvents = new ArrayList<>();
         QueueEventHandlers queueEventHandlers = new QueueEventHandlers();
-        queueEventHandlers.before((eventName, eventPayload) -> beforeEvents.add(eventPayload));
+        queueEventHandlers.before((eventName, eventVersion, eventObject) -> beforeEvents.add(eventObject));
         queueEventHandlers.on(ChallengeStartedEvent.class, processedEvents::add);
-        queueEventHandlers.after((eventName, eventPayload) -> afterEvents.add(eventPayload));
+        queueEventHandlers.after((eventName, eventVersion, eventObject) -> afterEvents.add(eventObject));
 
         // When
         sendRaw("ignore");
