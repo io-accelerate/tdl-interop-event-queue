@@ -8,18 +8,18 @@ import tdl.participant.queue.connector.QueueEvent;
 
 @Getter
 @ToString
-@QueueEvent(name = "challengeStarted", version = "0.1")
-public class ChallengeStartedEvent {
+@QueueEvent(name = "challengeStarted", version = "0.2")
+public class ChallengeStartedEvent implements ParticipantEvent {
+    private final long timestampMillis;
     private final String participant;
     private final String challengeId;
-    private final int timestampSec;
 
     @JsonCreator
-    public ChallengeStartedEvent(@JsonProperty("participant") String participant,
-                                 @JsonProperty("challengeId") String challengeId,
-                                 @JsonProperty("timestampSec") int timestampSec) {
+    public ChallengeStartedEvent(@JsonProperty("timestampMillis") long timestampMillis,
+                                 @JsonProperty("participant") String participant,
+                                 @JsonProperty("challengeId") String challengeId) {
+        this.timestampMillis = timestampMillis;
         this.participant = participant;
         this.challengeId = challengeId;
-        this.timestampSec = timestampSec;
     }
 }

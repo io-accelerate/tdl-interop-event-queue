@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class SendEventCommand implements Command {
     private static final Logger log = LoggerFactory.getLogger(SendEventCommand.class);
@@ -49,7 +50,7 @@ public class SendEventCommand implements Command {
             }
 
             // Print
-            log.info(messageBodyAsJson);
+            log.info(message.toString());
 
             // Send
             if (dryRun) {
@@ -69,17 +70,25 @@ public class SendEventCommand implements Command {
     //~~~~~~ Helpers
 
     private static String buildJsonFromTheRestOfThe(String[] args) {
-        String jsonString = "";
+        Map<String, String> valueMap = new HashMap<>();
         for (int index = KEY_VALUE_PAIRS_AS_PARAMETER; index < args.length; index++) {
             String[] splitEachToken = args[index].split("=");
             String key = splitEachToken[0];
             String value = splitEachToken[1];
-            jsonString = jsonString.isEmpty()
-                    ? String.format("\"%s\": \"%s\"", key, value)
-                    : String.format("%s, \"%s\": \"%s\"", jsonString, key, value);
+            valueMap.put(key, value);
         }
 
-        return String.format("{%s}", jsonString);
+        //Replace timestamp token
+        String timestampKey = "timestampMillis";
+        if (valueMap.containsKey(timestampKey)) {
+            if ("NOW".equals(valueMap.get(timestampKey))) {
+                valueMap.put(timestampKey, System.currentTimeMillis() + "");
+            }
+        }
+
+        return valueMap.entrySet().stream()
+                .map(entry -> String.format("\"%s\": \"%s\"", entry.getKey(), entry.getValue()))
+        .collect(Collectors.joining(", ","{","}"));
     }
 
     private static Object getEventObject(String eventName, String messageBody) throws IOException {

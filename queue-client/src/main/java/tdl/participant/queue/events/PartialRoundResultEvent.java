@@ -7,17 +7,20 @@ import tdl.participant.queue.connector.QueueEvent;
 
 @Getter
 @ToString
-@QueueEvent(name = "partialRoundResult", version = "0.1")
-public class PartialRoundResultEvent {
+@QueueEvent(name = "partialRoundResult", version = "0.2")
+public class PartialRoundResultEvent implements ParticipantEvent {
+    private final long timestampMillis;
     private final String participant;
     private final String roundId;
     private final int clockTimeMin;
     private final int penaltyTimeMin;
 
-    public PartialRoundResultEvent(@JsonProperty("participant") String participant,
-                               @JsonProperty("roundId") String roundId,
-                               @JsonProperty("clockTimeMin") int clockTimeMin,
-                               @JsonProperty("penaltyTimeMin") int penaltyTimeMin) {
+    public PartialRoundResultEvent(@JsonProperty("timestampMillis") long timestampMillis,
+                                   @JsonProperty("participant") String participant,
+                                   @JsonProperty("roundId") String roundId,
+                                   @JsonProperty("clockTimeMin") int clockTimeMin,
+                                   @JsonProperty("penaltyTimeMin") int penaltyTimeMin) {
+        this.timestampMillis = timestampMillis;
         this.participant = participant;
         this.roundId = roundId;
         this.clockTimeMin = clockTimeMin;

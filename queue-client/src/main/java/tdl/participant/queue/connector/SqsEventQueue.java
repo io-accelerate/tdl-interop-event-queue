@@ -185,13 +185,13 @@ public class SqsEventQueue {
             }
 
             // Handle
-            HandleRule handleRule = eventHandlers.getRuleFor(eventName, eventVersion);
+            HandleRule handleRule = eventHandlers.getHandleRuleFor(eventName, eventVersion);
             try {
                 Object object = mapper.readerFor(handleRule.getType()).readValue(message.getBody());
-                log.info("[Queue->App] Received {} event: {}", eventName, object);
-
+                eventHandlers.getBeforeEventInspector().inspect(eventName, object);
                 //noinspection unchecked
                 handleRule.getConsumer().accept(object);
+                eventHandlers.getAfterEventInspector().inspect(eventName, object);
                 return message;
             } catch (IOException e) {
                 throw new EventDeserializationException("Cannot deserialize message into an instance of "

@@ -71,8 +71,8 @@ public class QueueCLITool {
                         "      QueueCLITool status \n" +
                         "\n" +
                         "   For example: \n" +
-                        "      QueueCLITool send challengeStarted participant=X challengeId=CHK timestampSec=1\n" +
-                        "      QueueCLITool send challengeCompleted participant=X challengeId=CHK timestampSec=1 totalClockTimeMin=2 totalPenaltyTimeMin=3\n" +
+                        "      QueueCLITool send challengeStarted timestampMillis=NOW participant=X challengeId=CHK timestampSec=1\n" +
+                        "      QueueCLITool send challengeCompleted timestampMillis=NOW participant=X challengeId=CHK timestampSec=1 totalClockTimeMin=2 totalPenaltyTimeMin=3\n" +
                         "\n" +
                         "List of event types\n" +
                         "-------------------\n" +

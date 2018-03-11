@@ -2,9 +2,9 @@ package tdl.participant.queue.connector;
 
 public class HandleRule<T> {
     private final Class<T> type;
-    private final MessageConsumer<T> consumer;
+    private final EventConsumer<T> consumer;
 
-    HandleRule(Class<T> type, MessageConsumer<T> consumer) {
+    HandleRule(Class<T> type, EventConsumer<T> consumer) {
         this.type = type;
         this.consumer = consumer;
     }
@@ -13,7 +13,7 @@ public class HandleRule<T> {
         return type;
     }
 
-    public MessageConsumer<T> getConsumer() {
+    public EventConsumer<T> getConsumer() {
         return consumer;
     }
 }

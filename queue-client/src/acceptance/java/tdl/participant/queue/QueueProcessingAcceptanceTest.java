@@ -37,14 +37,18 @@ public class QueueProcessingAcceptanceTest {
     public void should_submit_and_consume_valid_request() throws Exception {
         // Given
         SqsEventQueue sqsEventQueue = initQueue(queueUrl);
-        List<Object> capturedEvents = new ArrayList<>();
+        List<Object> afterEvents = new ArrayList<>();
+        List<Object> processedEvents = new ArrayList<>();
+        List<Object> beforeEvents = new ArrayList<>();
         QueueEventHandlers queueEventHandlers = new QueueEventHandlers();
-        queueEventHandlers.put(ChallengeStartedEvent.class, capturedEvents::add);
+        queueEventHandlers.before((eventName, eventPayload) -> beforeEvents.add(eventPayload));
+        queueEventHandlers.on(ChallengeStartedEvent.class, processedEvents::add);
+        queueEventHandlers.after((eventName, eventPayload) -> afterEvents.add(eventPayload));
 
         // When
         sendRaw("ignore");
         sqsEventQueue.send(new UnknownEvent("unknown event"));
-        sqsEventQueue.send(new ChallengeStartedEvent("x", "y", 0));
+        sqsEventQueue.send(new ChallengeStartedEvent(123,"x", "y"));
 
         sqsEventQueue.subscribeToMessages(queueEventHandlers);
 
@@ -54,8 +58,12 @@ public class QueueProcessingAcceptanceTest {
         sqsEventQueue.unsubscribeFromMessages();
 
         // And the handlers have been called
-        assertThat(capturedEvents.size(), equalTo(1));
-        assertThat(capturedEvents.get(0), instanceOf(ChallengeStartedEvent.class));
+        assertThat(processedEvents.size(), equalTo(1));
+        assertThat(processedEvents.get(0), instanceOf(ChallengeStartedEvent.class));
+
+        // Before and after where called
+        assertThat(afterEvents, equalTo(processedEvents));
+        assertThat(beforeEvents, equalTo(processedEvents));
     }
 
     @Test(timeout = 2000)

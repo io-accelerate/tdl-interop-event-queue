@@ -71,9 +71,10 @@ public class SendCsvAsEventsCommand implements Command {
 
         //Challenge Started / Completed
         asDate(record.get("DateStarted")).ifPresent(
-                timestampSec -> events.add(new ChallengeStartedEvent(participant, challengeId, timestampSec)));
+                timestampSec -> events.add(new ChallengeStartedEvent(asMillis(timestampSec), participant, challengeId)));
         asDate(record.get("DateCompleted")).ifPresent(
-                timestampSec -> events.add(new ChallengeCompletedEvent(participant, challengeId, timestampSec, 0, 0)));
+                timestampSec -> events.add(new ChallengeCompletedEvent(asMillis(timestampSec),
+                        participant, challengeId, 0, 0)));
 
 
         //Rounds
@@ -85,23 +86,31 @@ public class SendCsvAsEventsCommand implements Command {
             Optional<Integer> penaltyTimeMin = asInt(record.get("X" + i));
 
             clockTimeMin.ifPresent(clockTime -> penaltyTimeMin.ifPresent(
-                    penalties -> events.add(new RoundCompletedEvent(participant, roundId, clockTime, penalties))));
+                    penalties -> events.add(new RoundCompletedEvent(now(),participant, roundId, clockTime, penalties))));
 
             Optional<Integer> coverage = asInt(record.get("C" + i));
-            coverage.ifPresent((c) -> events.add(new CoverageComputedEvent(participant, roundId, c)));
+            coverage.ifPresent((c) -> events.add(new CoverageComputedEvent(now(), participant, roundId, c)));
         }
 
         asUrl(record.get("SourceCode")).ifPresent(
-                sourceCodeLink -> events.add(new SourceCodeUpdatedEvent(participant, challengeId, sourceCodeLink)));
+                sourceCodeLink -> events.add(new SourceCodeUpdatedEvent(now(), participant, challengeId, sourceCodeLink)));
         asUrl(record.get("Screencast")).ifPresent(
-                screenCastLink -> events.add(new AnonymisedVideoUpdatedEvent(participant, challengeId, screenCastLink)));
+                screenCastLink -> events.add(new AnonymisedVideoUpdatedEvent(now(), participant, challengeId, screenCastLink)));
         asString(record.get("Language")).ifPresent(
-                programmingLanguage -> events.add(new ProgrammingLanguageDetectedEvent(participant, challengeId, programmingLanguage)));
+                programmingLanguage -> events.add(new ProgrammingLanguageDetectedEvent(now(), participant, challengeId, programmingLanguage)));
 
         return events;
     }
 
-    private Optional<String> asString(String s) {
+    private static long now() {
+        return System.currentTimeMillis();
+    }
+
+    private static long asMillis(Integer timestampSec) {
+        return timestampSec*1000;
+    }
+
+    private static  Optional<String> asString(String s) {
         if (s.trim().isEmpty()) {
             return Optional.empty();
         }
@@ -109,7 +118,7 @@ public class SendCsvAsEventsCommand implements Command {
         return Optional.of(s);
     }
 
-    private Optional<String> asUrl(String s) {
+    private static  Optional<String> asUrl(String s) {
         if (!s.startsWith("http")) {
             return Optional.empty();
         }
@@ -117,7 +126,7 @@ public class SendCsvAsEventsCommand implements Command {
         return Optional.of(s);
     }
 
-    private Optional<Integer> asInt(String s) {
+    private static Optional<Integer> asInt(String s) {
         if (s.trim().isEmpty()) {
             return Optional.empty();
         }
