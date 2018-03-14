@@ -135,6 +135,6 @@ You trigger the process by running the `release` command locally.
 The command will increment the release number and create and annotated tag:
 ```bash
 ./gradlew release
-git push --all
 git push --tags
+git push --all
 ```
