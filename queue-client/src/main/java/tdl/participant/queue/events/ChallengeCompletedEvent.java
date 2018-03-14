@@ -2,12 +2,10 @@ package tdl.participant.queue.events;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Getter;
-import lombok.ToString;
+import lombok.Value;
 import tdl.participant.queue.connector.QueueEvent;
 
-@Getter
-@ToString
+@Value
 @QueueEvent(name = "challengeCompleted", version = "0.2")
 public class ChallengeCompletedEvent implements ParticipantEvent {
     private final long timestampMillis;

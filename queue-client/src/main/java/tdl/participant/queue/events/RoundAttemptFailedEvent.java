@@ -1,21 +1,19 @@
 package tdl.participant.queue.events;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Getter;
-import lombok.ToString;
+import lombok.Value;
 import tdl.participant.queue.connector.QueueEvent;
 
-@Getter
-@ToString
-@QueueEvent(name = "partialRoundResult", version = "0.2")
-public class PartialRoundResultEvent implements ParticipantEvent {
+@Value
+@QueueEvent(name = "roundAttemptFailed", version = "0.2")
+public class RoundAttemptFailedEvent implements ParticipantEvent {
     private final long timestampMillis;
     private final String participant;
     private final String roundId;
     private final int clockTimeMin;
     private final int penaltyTimeMin;
 
-    public PartialRoundResultEvent(@JsonProperty("timestampMillis") long timestampMillis,
+    public RoundAttemptFailedEvent(@JsonProperty("timestampMillis") long timestampMillis,
                                    @JsonProperty("participant") String participant,
                                    @JsonProperty("roundId") String roundId,
                                    @JsonProperty("clockTimeMin") int clockTimeMin,
