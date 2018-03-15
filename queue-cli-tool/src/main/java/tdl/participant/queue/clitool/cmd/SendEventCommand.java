@@ -80,10 +80,8 @@ public class SendEventCommand implements Command {
 
         //Replace timestamp token
         String timestampKey = "timestampMillis";
-        if (valueMap.containsKey(timestampKey)) {
-            if ("NOW".equals(valueMap.get(timestampKey))) {
-                valueMap.put(timestampKey, System.currentTimeMillis() + "");
-            }
+        if ("NOW".equals(valueMap.getOrDefault(timestampKey, "NOW"))) {
+            valueMap.put(timestampKey, System.currentTimeMillis() + "");
         }
 
         return valueMap.entrySet().stream()
