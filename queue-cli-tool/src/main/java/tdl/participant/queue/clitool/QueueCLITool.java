@@ -1,7 +1,6 @@
 package tdl.participant.queue.clitool;
 
-import com.amazonaws.auth.AWSStaticCredentialsProvider;
-import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
 import com.amazonaws.client.builder.AwsClientBuilder;
 import com.amazonaws.services.sqs.AmazonSQS;
 import com.amazonaws.services.sqs.AmazonSQSClientBuilder;
@@ -27,9 +26,7 @@ public class QueueCLITool {
 
         AmazonSQS client = createAWSClient(
                 config.getString("sqs.serviceEndpoint"),
-                config.getString("sqs.signingRegion"),
-                config.getString("sqs.accessKey"),
-                config.getString("sqs.secretKey")
+                config.getString("sqs.signingRegion")
         );
 
         String queueUrl = config.getString("sqs.queueUrl");
@@ -80,12 +77,12 @@ public class QueueCLITool {
         );
     }
 
-    private static AmazonSQS createAWSClient(String serviceEndpoint, String signingRegion, String accessKey, String secretKey) {
+    private static AmazonSQS createAWSClient(String serviceEndpoint, String signingRegion) {
         AwsClientBuilder.EndpointConfiguration endpointConfiguration =
                 new AwsClientBuilder.EndpointConfiguration(serviceEndpoint, signingRegion);
         return AmazonSQSClientBuilder.standard()
                 .withEndpointConfiguration(endpointConfiguration)
-                .withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials(accessKey, secretKey)))
+                .withCredentials(new DefaultAWSCredentialsProviderChain())
                 .build();
     }
 

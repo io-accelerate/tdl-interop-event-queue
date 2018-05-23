@@ -86,11 +86,12 @@ Create a `.private/local-acceptance.conf` that contains the SQS configuration:
 sqs {
   serviceEndpoint = "http://localhost:9324"
   signingRegion = "eu-west-2"
-  accessKey = "x"
-  secretKey = "y"
   queueUrl = "http://localhost:9324/queue/participant-events"
 }
 ```
+
+Ensure that your environment has the right AWS credentials.
+If not, you can set the `AWS_ACCESS_KEY_ID` and `AWS_SECRET_KEY` environment variables.
 
 ### Run QueueCLITool
 
@@ -126,6 +127,10 @@ Run tests
 ./gradlew acceptanceTest -i
 ```
 
+Stop external dependencies
+```bash
+python ./local-sqs/elasticmq-wrapper.py stop
+```
 
 ### Release library to jcenter and mavenCentral
 
