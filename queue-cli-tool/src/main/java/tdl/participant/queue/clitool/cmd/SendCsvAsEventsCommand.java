@@ -134,7 +134,7 @@ public class SendCsvAsEventsCommand implements Command {
         return Optional.of(Integer.parseInt(s));
     }
 
-    private static DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE;
+    private static DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ISO_DATE;
     private Optional<Integer> asDate(String s) {
         if (s.trim().isEmpty()) {
             return Optional.empty();
