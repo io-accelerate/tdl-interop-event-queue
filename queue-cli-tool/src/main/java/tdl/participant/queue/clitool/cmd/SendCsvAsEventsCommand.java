@@ -9,12 +9,11 @@ import tdl.participant.queue.events.*;
 
 import java.io.FileReader;
 import java.io.Reader;
-import java.time.*;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.TemporalAccessor;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import static tdl.participant.queue.clitool.cmd.TypeConversion.*;
 
 public class SendCsvAsEventsCommand implements Command {
     private static final Logger log = LoggerFactory.getLogger(SendCsvAsEventsCommand.class);
@@ -106,44 +105,7 @@ public class SendCsvAsEventsCommand implements Command {
         return System.currentTimeMillis();
     }
 
-    private static long asMillis(Integer timestampSec) {
-        return timestampSec*1000;
-    }
 
-    private static  Optional<String> asString(String s) {
-        if (s.trim().isEmpty()) {
-            return Optional.empty();
-        }
 
-        return Optional.of(s);
-    }
 
-    private static  Optional<String> asUrl(String s) {
-        if (!s.startsWith("http")) {
-            return Optional.empty();
-        }
-
-        return Optional.of(s);
-    }
-
-    private static Optional<Integer> asInt(String s) {
-        if (s.trim().isEmpty()) {
-            return Optional.empty();
-        }
-
-        return Optional.of(Integer.parseInt(s));
-    }
-
-    private static DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ISO_DATE;
-    private Optional<Integer> asDate(String s) {
-        if (s.trim().isEmpty()) {
-            return Optional.empty();
-        }
-
-        TemporalAccessor temporalAccessor = DATE_FORMATTER.parse(s);
-        LocalDate localDate = LocalDate.from(temporalAccessor);
-        ZonedDateTime zonedDateTime = ZonedDateTime.of(localDate,LocalTime.of(0, 0), ZoneId.of("UTC"));
-        Instant result = Instant.from(zonedDateTime);
-        return Optional.of((int)result.getEpochSecond());
-    }
 }
