@@ -33,6 +33,21 @@ class TypeConversion {
         return Optional.of(s);
     }
 
+    static <T extends Enum<T>> Optional<T> asEnum(String s, Class<T> enumType) {
+        if (s.trim().isEmpty()) {
+            return Optional.empty();
+        }
+
+        T value;
+        try {
+            value = Enum.valueOf(enumType, s);
+        } catch (IllegalArgumentException e) {
+            return Optional.empty();
+        }
+
+        return Optional.of(value);
+    }
+
     static  Optional<String> asUrl(String s) {
         if (!s.startsWith("http")) {
             return Optional.empty();

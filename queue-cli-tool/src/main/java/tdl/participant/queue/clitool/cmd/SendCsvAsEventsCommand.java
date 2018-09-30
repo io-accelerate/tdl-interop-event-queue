@@ -93,19 +93,33 @@ public class SendCsvAsEventsCommand implements Command {
 
         asUrl(record.get("SourceCode")).ifPresent(
                 sourceCodeLink -> events.add(new SourceCodeUpdatedEvent(now(), participant, challengeId, sourceCodeLink)));
+
+        ScreencastType screencastType = asEnum(record.get("ScreencastType"), ScreencastType.class).orElse(ScreencastType.RAW);
         asUrl(record.get("Screencast")).ifPresent(
-                screenCastLink -> events.add(new AnonymisedVideoUpdatedEvent(now(), participant, challengeId, screenCastLink)));
+                screenCastLink -> {
+                    if (screencastType == ScreencastType.ANON) {
+                        events.add(new AnonymisedVideoUpdatedEvent(now(), participant, challengeId, screenCastLink));
+                    } else {
+                        events.add(new RawVideoUpdatedEvent(now(), participant, challengeId, screenCastLink));
+                    }
+                });
         asString(record.get("Language")).ifPresent(
                 programmingLanguage -> events.add(new ProgrammingLanguageDetectedEvent(now(), participant, challengeId, programmingLanguage)));
 
         return events;
     }
 
+
+
     private static long now() {
         return System.currentTimeMillis();
     }
 
 
+    enum ScreencastType {
+        ANON,
+        RAW
+    }
 
 
 }
