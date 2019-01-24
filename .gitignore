@@ -8,3 +8,4 @@ pid-*
 *.eml
 .private
 build
+*.iml
