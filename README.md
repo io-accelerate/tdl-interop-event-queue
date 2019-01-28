@@ -132,6 +132,14 @@ Stop external dependencies
 python ./local-sqs/elasticmq-wrapper.py stop
 ```
 
+### Install to local maven repository
+
+```
+   $ ./gradlew install
+```
+
+Installs the 'archives' artifacts into the local Maven repository. Check in your local `~/.m2/respository/ro/ghionoiu/queue-client` for the installed artifact. The version of the artifact should correspond to that in the `version.txt` file in the project root.
+
 ### Release library to jcenter and mavenCentral
 
 The CI server is configured to pushs release branches to Bintray.
