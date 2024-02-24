@@ -1,0 +1,43 @@
+
+
+
+sourceSets {
+    acceptance {
+        java.srcDir file('src/acceptance/java')
+        resources.srcDir file('src/acceptance/resources')
+        compileClasspath += main.output + test.output
+        runtimeClasspath += main.output + test.output
+    }
+}
+
+configurations {
+    acceptanceImplementation.extendsFrom(testImplementation)
+}
+
+task acceptanceTest(type: Test) {
+    description "Runs acceptance test"
+    group = 'verification'
+    testClassesDirs = sourceSets.acceptance.output.classesDirs
+    classpath = sourceSets.acceptance.runtimeClasspath
+    outputs.upToDateWhen { false }
+
+    useJUnitPlatform {}
+}
+
+
+//Chaining
+acceptanceTest.dependsOn test
+check.dependsOn acceptanceTest
+
+// IDE setup
+idea {
+    module {
+        testSourceDirs += file('src/acceptance/java')
+    }
+}
+
+//Separate test results. http://stackoverflow.com/questions/12675080/how-to-cleanly-separate-two-instances-of-the-test-task-in-a-gradle-build/19251645#19251645
+//noinspection GroovyAssignabilityCheck
+//tasks.withType(Test) {
+//    reports.html.destination = file("${reporting.baseDir}/${name}")
+//}

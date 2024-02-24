@@ -1,124 +1,77 @@
-sourceSets {
-    acceptance {
-        java.srcDir file('src/acceptance/java')
-        resources.srcDir file('src/acceptance/resources')
-        compileClasspath += main.output + test.output + configurations.testRuntime
-        runtimeClasspath += main.output + test.output + configurations.testRuntime
-    }
+plugins {
+    // Ref here: https://docs.gradle.org/8.6/userguide/publishing_setup.html
+    id('java-library')
+    id('signing')
+    id('maven-publish')
+    id('idea')
 }
 
-configurations {
-    acceptanceCompile.extendsFrom testCompile
-    acceptanceRuntime.extendsFrom testRuntime
-}
-
-apply plugin: 'idea'
-apply plugin: 'com.github.johnrengelman.shadow'
-
-idea {
-    module {
-        testSourceDirs += file('src/acceptance/java')
-    }
-}
+apply from: project(':build-logic').file('shared.gradle')
+apply from: project(':build-logic').file('acceptance.gradle')
 
 ext {
     jacksonVersion = '2.8.4'
 }
 
 dependencies {
-    compile 'com.amazonaws:aws-java-sdk-sqs:1.11.253'
+    implementation('com.amazonaws:aws-java-sdk-sqs:1.11.253')
 
-    compile 'com.fasterxml.jackson.core:jackson-core:'+jacksonVersion
-    compile 'com.fasterxml.jackson.core:jackson-databind:'+jacksonVersion
-    compile 'com.fasterxml.jackson.core:jackson-annotations:'+jacksonVersion
+    implementation('com.fasterxml.jackson.core:jackson-core:'+jacksonVersion)
+    implementation('com.fasterxml.jackson.core:jackson-databind:'+jacksonVersion)
+    implementation('com.fasterxml.jackson.core:jackson-annotations:'+jacksonVersion)
 }
 
-task acceptanceTest(type: Test) {
-    description "Runs acceptance test"
-    group = 'verification'
-    testClassesDir = sourceSets.acceptance.output.classesDir
-    classpath = sourceSets.acceptance.runtimeClasspath
-    outputs.upToDateWhen { false }
 
-    useJUnit {}
-}
 
-//Chaining
-acceptanceTest.dependsOn test
-check.dependsOn acceptanceTest
-
-//~~~~~ Release management
-
-/**
- * Prerequisites
- *    - Create package in Bintray
- *
- * Now you can use regular maven upload to push files to you package.
- * The version will be created automatically
- *
- * To push to Maven Central use Bintray sync features:
- *    - Created request for jcenter ( if missing )
- *    - Manually sync the two repos
- *
- * To publish new version use the Bintray UI:
- *    - publish current artifacts
- *    - sync with Maven Central
- */
-apply plugin: 'maven'
-
-private static String readSystem(String property) {
-    System.getenv(property) != null  ? System.getenv(property) : "unset"
-}
-
-task sourceJar(type: Jar) {
-    classifier = 'sources'
-    from sourceSets.main.allSource
-}
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
-    from javadoc.destinationDir
-}
-
-// Add the sourceJars to non-extractor modules
-artifacts {
-    archives sourceJar
-    archives javadocJar
-}
-
-uploadArchives {
-    repositories.mavenDeployer {
-        name = 'bintray-julianghionoiu-queue-client'
-        repository(id: 'bintray-julianghionoiu-queue-client',
-                url: 'https://api.bintray.com/maven/julianghionoiu/maven/queue-client') {
-            authentication(userName: readSystem("BINTRAY_USER"), password: readSystem("BINTRAY_KEY"))
-        }
-
-        pom.project {
-            name 'Client for the event queue'
-            description 'Library designed to manage the interaction with the event queue'
-            url 'https://github.com/julianghionoiu/tdl-interop-event-queue'
-
-            developers {
-                developer {
-                    name 'Iulian (Julian) Ghionoiu'
-                    email 'iulian.ghionoiu@gmail.com'
-                    organization 'Iulian Ghionoiu'
-                    organizationUrl 'https://github.com/julianghionoiu'
+// Refs:
+// https://stackoverflow.com/a/68505768
+publishing {
+    publications {
+        release(MavenPublication) {
+            from components.java
+            pom {
+                name = 'Java client for TDL system'
+                description = 'A Java client that allows users to get up to speed with the TDL system.'
+                url = 'https://github.com/julianghionoiu/tdl-interop-event-queue'
+                licenses {
+                    license {
+                        name = 'Apache License, Version 2.0'
+                        url = 'https://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
                 }
-            }
-
-            scm {
-                connection 'scm:git:git@github.com:julianghionoiu/tdl-interop-event-queue.git'
-                developerConnection 'scm:git:git@github.com:julianghionoiu/tdl-interop-event-queue.git'
-                url 'git@github.com:julianghionoiu/tdl-interop-event-queue.git'
-            }
-
-            licenses {
-                license {
-                    name 'Apache License, Version 2.0'
-                    url 'https://www.apache.org/licenses/LICENSE-2.0.txt'
+                developers {
+                    developer {
+                        name = 'Iulian (Julian) Ghionoiu'
+                        email = 'iulian.ghionoiu@gmail.com'
+                        organization = 'Iulian Ghionoiu'
+                        organizationUrl = 'https://github.com/julianghionoiu'
+                    }
+                }
+                scm {
+                    connection = 'scm:git:git@github.com:julianghionoiu/tdl-interop-event-queue.git'
+                    developerConnection = 'scm:git:git@github.com:julianghionoiu/tdl-interop-event-queue.git'
+                    url = 'git@github.com:julianghionoiu/tdl-interop-event-queue.git'
                 }
             }
         }
     }
+    repositories {
+        maven {
+            url = uri("https://oss.sonatype.org/service/local/staging/deploy/maven2/")
+            credentials {
+                username = project.findProperty('mavenCentralUsername')
+                password = project.findProperty('mavenCentralPassword')
+            }
+        }
+    }
+}
+
+// Signs using gpg-agent
+// Key name configured under "~/.gradle/gradle.properties"
+//
+// Refs:
+// https://docs.gradle.org/7.4.1/userguide/signing_plugin.html#sec:using_gpg_agent
+signing {
+    useGpgCmd()
+    sign publishing.publications.release
 }

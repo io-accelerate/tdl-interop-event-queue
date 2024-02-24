@@ -7,17 +7,16 @@ import com.amazonaws.services.sqs.AmazonSQS;
 import com.amazonaws.services.sqs.AmazonSQSClientBuilder;
 import com.amazonaws.services.sqs.model.PurgeQueueRequest;
 import com.amazonaws.services.sqs.model.SendMessageRequest;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
 import tdl.participant.queue.connector.QueueEvent;
 import tdl.participant.queue.connector.QueueEventHandlers;
 import tdl.participant.queue.connector.QueueSize;
 import tdl.participant.queue.connector.SqsEventQueue;
 import tdl.participant.queue.events.ChallengeStartedEvent;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -26,7 +25,7 @@ public class QueueProcessingAcceptanceTest {
     private String queueUrl;
     private String blockingQueueUrl;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         client = testAwsClient();
         queueUrl = "http://localhost:9324/queue/acceptance-test";
@@ -44,29 +43,25 @@ public class QueueProcessingAcceptanceTest {
         queueEventHandlers.before((eventName, eventVersion, eventObject) -> beforeEvents.add(eventObject));
         queueEventHandlers.on(ChallengeStartedEvent.class, processedEvents::add);
         queueEventHandlers.after((eventName, eventVersion, eventObject) -> afterEvents.add(eventObject));
-
         // When
         sendRaw("ignore");
         sqsEventQueue.send(new UnknownEvent("unknown event"));
         sqsEventQueue.send(new ChallengeStartedEvent(123,"x", "y"));
-
         sqsEventQueue.subscribeToMessages(queueEventHandlers);
-
         // Then messages have been processed
         Thread.sleep(500);
         assertThat(sqsEventQueue.getQueueSize(), is(new QueueSize(0, 2, 0)));
         sqsEventQueue.unsubscribeFromMessages();
-
         // And the handlers have been called
         assertThat(processedEvents.size(), equalTo(1));
         assertThat(processedEvents.get(0), instanceOf(ChallengeStartedEvent.class));
-
         // Before and after where called
         assertThat(afterEvents, equalTo(processedEvents));
         assertThat(beforeEvents, equalTo(processedEvents));
     }
 
-    @Test(timeout = 2000)
+    @Test
+    @Timeout(2)
     public void should_not_block_if_queue_not_available() {
         SqsEventQueue sqsEventQueue = new SqsEventQueue(client, blockingQueueUrl);
         try {
@@ -76,7 +71,6 @@ public class QueueProcessingAcceptanceTest {
             //Ignored
         }
     }
-
 
     private static AmazonSQS testAwsClient() {
         AwsClientBuilder.EndpointConfiguration endpointConfiguration =
@@ -106,11 +100,9 @@ public class QueueProcessingAcceptanceTest {
     @QueueEvent(name = "unknown", version = "0.1")
     private class UnknownEvent {
         private String text;
-
         UnknownEvent(String text) {
             this.text = text;
         }
-
         public String getText() {
             return text;
         }
