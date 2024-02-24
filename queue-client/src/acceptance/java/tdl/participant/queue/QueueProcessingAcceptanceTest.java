@@ -15,8 +15,10 @@ import tdl.participant.queue.connector.QueueEventHandlers;
 import tdl.participant.queue.connector.QueueSize;
 import tdl.participant.queue.connector.SqsEventQueue;
 import tdl.participant.queue.events.ChallengeStartedEvent;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 

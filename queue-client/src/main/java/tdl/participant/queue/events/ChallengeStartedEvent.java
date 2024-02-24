@@ -1,6 +1,5 @@
 package tdl.participant.queue.events;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import tdl.participant.queue.connector.QueueEvent;
 
