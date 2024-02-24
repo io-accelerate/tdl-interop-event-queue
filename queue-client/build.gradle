@@ -9,20 +9,6 @@ plugins {
 apply from: project(':build-logic').file('shared.gradle')
 apply from: project(':build-logic').file('acceptance.gradle')
 
-ext {
-    jacksonVersion = '2.8.4'
-}
-
-dependencies {
-    implementation('com.amazonaws:aws-java-sdk-sqs:1.11.253')
-
-    implementation('com.fasterxml.jackson.core:jackson-core:'+jacksonVersion)
-    implementation('com.fasterxml.jackson.core:jackson-databind:'+jacksonVersion)
-    implementation('com.fasterxml.jackson.core:jackson-annotations:'+jacksonVersion)
-}
-
-
-
 // Refs:
 // https://stackoverflow.com/a/68505768
 publishing {

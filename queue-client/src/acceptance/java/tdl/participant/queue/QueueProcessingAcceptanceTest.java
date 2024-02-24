@@ -56,7 +56,7 @@ public class QueueProcessingAcceptanceTest {
         sqsEventQueue.unsubscribeFromMessages();
         // And the handlers have been called
         assertThat(processedEvents.size(), equalTo(1));
-        assertThat(processedEvents.get(0), instanceOf(ChallengeStartedEvent.class));
+        assertThat(processedEvents.getFirst(), instanceOf(ChallengeStartedEvent.class));
         // Before and after where called
         assertThat(afterEvents, equalTo(processedEvents));
         assertThat(beforeEvents, equalTo(processedEvents));
@@ -100,13 +100,6 @@ public class QueueProcessingAcceptanceTest {
     }
 
     @QueueEvent(name = "unknown", version = "0.1")
-    private class UnknownEvent {
-        private String text;
-        UnknownEvent(String text) {
-            this.text = text;
-        }
-        public String getText() {
-            return text;
-        }
+        private record UnknownEvent(String text) {
     }
 }

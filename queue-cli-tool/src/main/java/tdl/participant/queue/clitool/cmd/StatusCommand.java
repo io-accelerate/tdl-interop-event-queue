@@ -23,9 +23,9 @@ public class StatusCommand implements Command {
                         "'{}' notVisible messages, " +
                         "'{}' delayed messages",
                 sqsEventQueue.getQueueUrl(),
-                queueSize.getAvailable(),
-                queueSize.getNotVisible(),
-                queueSize.getDelayed()
+                queueSize.available(),
+                queueSize.notVisible(),
+                queueSize.delayed()
         );
         return true;
     }

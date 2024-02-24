@@ -1,6 +1,4 @@
 
-
-
 sourceSets {
     acceptance {
         java.srcDir file('src/acceptance/java')
