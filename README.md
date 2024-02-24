@@ -114,7 +114,7 @@ Run unit tests
 
 Start external dependencies
 ```bash
-python ./local-sqs/elasticmq-wrapper.py start
+python3 ./local-sqs/elasticmq-wrapper.py start
 ```
 
 Create runnable artifacts
@@ -129,7 +129,7 @@ Run tests
 
 Stop external dependencies
 ```bash
-python ./local-sqs/elasticmq-wrapper.py stop
+python3 ./local-sqs/elasticmq-wrapper.py stop
 ```
 
 ### Install to local maven repository
