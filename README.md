@@ -132,22 +132,37 @@ Stop external dependencies
 python3 ./local-sqs/elasticmq-wrapper.py stop
 ```
 
-### Install to local maven repository
+### Release
 
-```
-   $ ./gradlew install
-```
+Configure the version inside the "gradle.properties" file
 
-Installs the 'archives' artifacts into the local Maven repository. Check in your local `~/.m2/respository/ro/ghionoiu/queue-client` for the installed artifact. The version of the artifact should correspond to that in the `version.txt` file in the project root.
-
-### Release library to jcenter and mavenCentral
-
-The CI server is configured to pushs release branches to Bintray.
-You trigger the process by running the `release` command locally.
-
-The command will increment the release number and create and annotated tag:
+Create publishing bundle into Maven Local
 ```bash
-./gradlew release
-git push --tags
-git push --all
+./gradlew publishToMavenLocal
 ```
+
+Check Maven Local contains release version:
+```
+ls -l /Users/julianghionoiu/.m2/repository/ro/ghionoiu/tdl-queue-client/$(cat gradle.properties | grep version | cut -d "=" -f2)
+```
+
+Publish to Maven Central Staging repo
+
+### Publish to Maven Central
+
+Publish to Maven Central Staging repo
+```bash
+./gradlew publish
+```
+
+A Staging repository is created automatically:
+https://oss.sonatype.org/#stagingRepositories
+
+To promote to the Live repo, do the following:
+- "Close" the Staging repo, Sonatype Lift will scan the repo for vuln, check the email
+- "Refresh" the Staging repos
+- "Release" the repo
+- wait between 15 mins and up to 2 hours for the new version to appear in Central
+- first check the Web UI: https://oss.sonatype.org/#view-repositories;releases~browsestorage
+- then check: https://repo1.maven.org/maven2/ro/ghionoiu/queue-client/
+
