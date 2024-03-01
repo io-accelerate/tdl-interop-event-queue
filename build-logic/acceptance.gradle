@@ -22,6 +22,11 @@ task acceptanceTest(type: Test) {
     useJUnitPlatform {}
 }
 
+// Needed to resolve a "no duplicate handling strategy has been set" error with custom sourcsets
+tasks.named("processAcceptanceResources") {
+    duplicatesStrategy = 'include'
+}
+
 
 //Chaining
 acceptanceTest.dependsOn test
