@@ -8,13 +8,4 @@ public record AnonymisedVideoUpdatedEvent(@JsonProperty("timestampMillis") long 
                                           @JsonProperty("participant") String participant,
                                           @JsonProperty("challengeId") String challengeId,
                                           @JsonProperty("videoLink") String videoLink) implements ParticipantEvent {
-    @Override
-    public long getTimestampMillis() {
-        return this.timestampMillis;
-    }
-
-    @Override
-    public String getParticipant() {
-        return this.participant;
-    }
 }

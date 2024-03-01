@@ -7,13 +7,4 @@ import tdl.participant.queue.connector.QueueEvent;
 public record RoundResumedEvent(@JsonProperty("timestampMillis") long timestampMillis,
                                 @JsonProperty("participant") String participant,
                                 @JsonProperty("roundId") String roundId) implements ParticipantEvent {
-    @Override
-    public long getTimestampMillis() {
-        return timestampMillis;
-    }
-
-    @Override
-    public String getParticipant() {
-        return participant;
-    }
 }

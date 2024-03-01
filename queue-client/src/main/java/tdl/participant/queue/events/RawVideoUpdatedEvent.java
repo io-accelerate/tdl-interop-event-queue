@@ -8,13 +8,4 @@ public record RawVideoUpdatedEvent(@JsonProperty("timestampMillis") long timesta
                                    @JsonProperty("participant") String participant,
                                    @JsonProperty("challengeId") String challengeId,
                                    @JsonProperty("videoLink") String videoLink) implements ParticipantEvent {
-    @Override
-    public long getTimestampMillis() {
-        return timestampMillis;
-    }
-
-    @Override
-    public String getParticipant() {
-        return participant;
-    }
 }

@@ -9,13 +9,4 @@ public record RoundAttemptFailedEvent(@JsonProperty("timestampMillis") long time
                                       @JsonProperty("roundId") String roundId,
                                       @JsonProperty("clockTimeMin") int clockTimeMin,
                                       @JsonProperty("penaltyTimeMin") int penaltyTimeMin) implements ParticipantEvent {
-    @Override
-    public long getTimestampMillis() {
-        return timestampMillis;
-    }
-
-    @Override
-    public String getParticipant() {
-        return participant;
-    }
 }

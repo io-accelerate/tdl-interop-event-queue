@@ -9,14 +9,4 @@ public record ChallengeCompletedEvent(@JsonProperty("timestampMillis") long time
                                       @JsonProperty("challengeId") String challengeId,
                                       @JsonProperty("totalClockTimeMin") int totalClockTimeMin,
                                       @JsonProperty("totalPenaltyTimeMin") int totalPenaltyTimeMin) implements ParticipantEvent {
-
-    @Override
-    public long getTimestampMillis() {
-        return timestampMillis;
-    }
-
-    @Override
-    public String getParticipant() {
-        return participant;
-    }
 }

@@ -8,18 +8,4 @@ public record SourceCodeProcessingFailedEvent(@JsonProperty("timestampMillis") l
                                               @JsonProperty("participant") String participant,
                                               @JsonProperty("challengeId") String challengeId,
                                               @JsonProperty("errorMessage") String errorMessage) implements ProcessingFailureEvent {
-    @Override
-    public long getTimestampMillis() {
-        return timestampMillis;
-    }
-
-    @Override
-    public String getParticipant() {
-        return participant;
-    }
-
-    @Override
-    public String getErrorMessage() {
-        return errorMessage;
-    }
 }

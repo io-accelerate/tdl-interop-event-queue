@@ -8,13 +8,4 @@ public record SourceCodeUpdatedEvent(@JsonProperty("timestampMillis") long times
                                      @JsonProperty("participant") String participant,
                                      @JsonProperty("challengeId") String challengeId,
                                      @JsonProperty("sourceCodeLink") String sourceCodeLink) implements ParticipantEvent {
-    @Override
-    public long getTimestampMillis() {
-        return timestampMillis;
-    }
-
-    @Override
-    public String getParticipant() {
-        return participant;
-    }
 }

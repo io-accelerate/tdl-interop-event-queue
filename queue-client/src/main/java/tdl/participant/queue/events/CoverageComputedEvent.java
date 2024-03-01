@@ -8,13 +8,4 @@ public record CoverageComputedEvent(@JsonProperty("timestampMillis") long timest
                                     @JsonProperty("participant") String participant,
                                     @JsonProperty("roundId") String roundId,
                                     @JsonProperty("coverage") int coverage) implements ParticipantEvent {
-    @Override
-    public long getTimestampMillis() {
-        return timestampMillis;
-    }
-
-    @Override
-    public String getParticipant() {
-        return participant;
-    }
 }

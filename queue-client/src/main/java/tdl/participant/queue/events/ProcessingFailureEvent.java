@@ -1,5 +1,5 @@
 package tdl.participant.queue.events;
 
 public interface ProcessingFailureEvent extends ParticipantEvent{
-    String getErrorMessage();
+    String errorMessage();
 }

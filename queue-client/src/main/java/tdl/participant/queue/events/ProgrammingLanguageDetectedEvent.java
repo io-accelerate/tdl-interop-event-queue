@@ -8,13 +8,4 @@ public record ProgrammingLanguageDetectedEvent(@JsonProperty("timestampMillis") 
                                               @JsonProperty("participant") String participant,
                                               @JsonProperty("challengeId") String challengeId,
                                               @JsonProperty("programmingLanguage") String programmingLanguage) implements ParticipantEvent {
-    @Override
-    public long getTimestampMillis() {
-        return timestampMillis;
-    }
-
-    @Override
-    public String getParticipant() {
-        return participant;
-    }
 }
