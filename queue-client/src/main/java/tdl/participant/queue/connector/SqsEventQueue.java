@@ -37,12 +37,19 @@ public class SqsEventQueue {
     }
 
     public QueueSize getQueueSize() {
-        GetQueueAttributesResult queueAttributes = client
-                .getQueueAttributes(queueUrl, Collections.singletonList("All"));
-        int available = Integer.parseInt(queueAttributes.getAttributes().get("ApproximateNumberOfMessages"));
-        int notVisible = Integer.parseInt(queueAttributes.getAttributes().get("ApproximateNumberOfMessagesNotVisible"));
-        int delayed = Integer.parseInt(queueAttributes.getAttributes().get("ApproximateNumberOfMessagesDelayed"));
+        int available = Integer.parseInt(getQueueAttribute("ApproximateNumberOfMessages"));
+        int notVisible = Integer.parseInt(getQueueAttribute("ApproximateNumberOfMessagesNotVisible"));
+        int delayed = Integer.parseInt(getQueueAttribute("ApproximateNumberOfMessagesDelayed"));
         return new QueueSize(available, notVisible, delayed);
+    }
+
+    private String getQueueAttribute(String attributeName) {
+        GetQueueAttributesResult queueAttributes = client
+                .getQueueAttributes(queueUrl, Collections.singletonList(attributeName));
+        return queueAttributes.getAttributes().get(attributeName);
+    }
+
+    private record asdasdg(GetQueueAttributesResult queueAttributes, String queueAttribute) {
     }
 
     public void send(Object object) throws EventSerializationException, EventProcessingException {
