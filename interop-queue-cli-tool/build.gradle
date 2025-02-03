@@ -1,0 +1,26 @@
+plugins {
+    id('java')
+    id('application')
+    id('java-library')
+    id('signing')
+    id('maven-publish')
+    id('com.github.johnrengelman.shadow') version '8.1.1'
+}
+
+application {
+    mainClass = 'io.accelerate.events.interop.queue.clitool.QueueCLITool'
+}
+
+apply from: project(':build-logic').file('shared.gradle')
+apply from: project(':build-logic').file('application.gradle')
+apply from: project(':build-logic').file('publish.gradle')
+
+dependencies {
+    implementation(project(':interop-queue-client'))
+    implementation('org.apache.commons:commons-csv:1.5')
+
+    implementation('com.typesafe:config:1.3.1')
+
+    implementation 'org.reflections:reflections:0.10.2'
+}
+

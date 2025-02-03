@@ -1,5 +1,5 @@
 
 include 'build-logic'
-include 'queue-client'
-include 'queue-cli-tool'
+include 'interop-queue-client'
+include 'interop-queue-cli-tool'
 

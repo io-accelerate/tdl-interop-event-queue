@@ -8,11 +8,11 @@
 
 ### Add as Maven dependency
 
-Add a dependency to `ro.ghionoiu:queue-client` in `compile` scope. See `bintray` shield for latest release number.
+Add a dependency to `io.accelerate:interop-queue-client` in `compile` scope.
 ```xml
 <dependency>
-  <groupId>ro.ghionoiu</groupId>
-  <artifactId>queue-client</artifactId>
+  <groupId>io.accelerate</groupId>
+  <artifactId>interop-queue-client</artifactId>
   <version>0.1.10</version>
   <type>pom</type>
 </dependency>
@@ -96,12 +96,12 @@ If not, you can set the `AWS_ACCESS_KEY_ID` and `AWS_SECRET_KEY` environment var
 ### Run QueueCLITool
 
 ```bash
-DRY_RUN=true java -Dconfig.file=.private/aws-queue-cli.conf -jar ./queue-cli-tool/build/libs/queue-cli-tool-*-all.jar [command] [args to command]
+DRY_RUN=true java -Dconfig.file=.private/aws-queue-cli.conf -jar ./interop-queue-cli-tool/build/libs/interop-queue-cli-tool-*-all.jar [command] [args to command]
 ```
 
 For usage and examples, run the below:
 ```bash
-DRY_RUN=true java -Dconfig.file=.private/aws-queue-cli.conf -jar ./queue-cli-tool/build/libs/queue-cli-tool-*-all.jar
+DRY_RUN=true java -Dconfig.file=.private/aws-queue-cli.conf -jar ./interop-queue-cli-tool/build/libs/interop-queue-cli-tool-*-all.jar
 ```
 
 
@@ -143,26 +143,23 @@ Create publishing bundle into Maven Local
 
 Check Maven Local contains release version:
 ```
-ls -l /Users/julianghionoiu/.m2/repository/ro/ghionoiu/tdl-queue-client/$(cat gradle.properties | grep version | cut -d "=" -f2)
+CURRENT_VERSION=$(cat gradle.properties | grep version | cut -d "=" -f2)
+
+ls -l $HOME/.m2/repository/io/accelerate/interop-queue-client/${CURRENT_VERSION}
 ```
 
 Publish to Maven Central Staging repo
 
-### Publish to Maven Central
+### Publish to Maven Central - the manual way
 
-Publish to Maven Central Staging repo
-```bash
-./gradlew publish
+At this point publishing to Maven Central from Gradle is only possible manually.
+Things might have changed, check this page:
+https://central.sonatype.org/publish/publish-portal-gradle/
+
+Generate the Maven Central bundle:
+```
+./generateMavenCentralBundle.sh
 ```
 
-A Staging repository is created automatically:
-https://oss.sonatype.org/#stagingRepositories
-
-To promote to the Live repo, do the following:
-- "Close" the Staging repo, Sonatype Lift will scan the repo for vuln, check the email
-- "Refresh" the Staging repos
-- "Release" the repo
-- wait between 15 mins and up to 2 hours for the new version to appear in Central
-- first check the Web UI: https://oss.sonatype.org/#view-repositories;releases~browsestorage
-- then check: https://repo1.maven.org/maven2/ro/ghionoiu/queue-client/
-
+Upload the bundle to Maven Central by clicking the "Publish Component" button.
+https://central.sonatype.com/publishing
