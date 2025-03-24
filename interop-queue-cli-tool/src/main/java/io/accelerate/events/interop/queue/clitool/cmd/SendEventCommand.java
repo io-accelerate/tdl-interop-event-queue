@@ -21,7 +21,7 @@ public class SendEventCommand implements Command {
     public static final Map<String, Class> eventNameToEventType;
     static {
         eventNameToEventType = new HashMap<>();
-        Reflections reflections = new Reflections("tdl.participant.queue.events");
+        Reflections reflections = new Reflections("io.accelerate.events.interop.queue.events");
         Set<Class<?>> annotated = reflections.getTypesAnnotatedWith(QueueEvent.class);
         annotated.forEach(theClass -> {
             QueueEvent annotation = theClass.getAnnotation(QueueEvent.class);
